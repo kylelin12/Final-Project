@@ -1,0 +1,26 @@
+ Final Project
+
+A.   Due Date : 6/12
+      - submit all code to : rick.platek@stuycs.org
+      - Subject : Final Project
+      - List all 4 group members
+      - Include instructions on how to run your code.
+      - Include code documentation.
+
+B.   Grading Rubric: (Listed in order)
+        i. Appropriate use of advanced data structures.
+       ii. Appropriate use of algorithms.
+      iii. Presentation.
+       iv. Difficulty of the project(s).
+
+
+C.  Presentations start on 6/9 and 6/12.
+     - Each group has 10 minutes to present.
+     - I advise you to use your own laptop for your presentation.
+
+
+D. Sites listed below have suggested Projects.
+
+    http://introcs.cs.princeton.edu/java/assignments/
+    http://nifty.stanford.edu/
+
