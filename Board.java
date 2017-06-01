@@ -1,20 +1,23 @@
 import java.util.PriorityQueue;
+import java.util.LinkedList;
+
+// http://introcs.cs.princeton.edu/java/assignments/8puzzle.html
 
 public class Board {
 
-	private int[][] _previous;
-	private int[][] _current;
+	private Integer[][] _previous;
+	private Integer[][] _current;
 	private int _movesDone;
 
 	// construct a board from an N-by-N array of tiles
-	public Board(int[][] tiles) {
+	public Board(Integer[][] tiles) {
 		_previous = null;
 		_current = tiles;
 		_movesDone = 0;
 	}
 	
 	// set _previous to inputted int[][]
-	public void setPrevious(int[][] tiles) {
+	public void setPrevious(Integer[][] tiles) {
 		_previous = tiles;
 	}
 	
@@ -45,25 +48,36 @@ public class Board {
 	
 	// does this board equal y
 	public boolean equals(Object y) {
-		
+		if (y == this)
+			return true;
+		if (y == null || !(y instanceof Board) || ((Board)y)._current.length != this._current.length)
+			return false;
+		for (int i = 0; i < _current.length; i++)
+			for (int j = 0; j < _current.length; j++)
+				if (((Board)y)._current[i][j] != this._current[i][j])
+					return false;
+		return true;
 	}
 	
 	// return an Iterable of all neighboring board positions
 	public Iterable < Board > neighbors() {
-		
+		LinkedList < Board > neighbors = new LinkedList < Board > ();
+		return neighbors;
 	}
 	
 	// return a string representation of the board
 	public String toString() {
 		String string = "";
 		int index = 1;
-		for (int[] r: _current) {
-			for (int c: r) {
+		for (Integer[] r: _current) {
+			for (Object c: r) {
+				
 				if (index % 3 == 0) {
 					string += c + "\n";
 				} else {
 					string += c + " ";
 				}
+				index++;
 			}
 		}
 		return string;
@@ -71,6 +85,13 @@ public class Board {
 	
 	//  test client
 	public static void main(String[] args) {
-		
+		Integer[][] three = {
+								{1, 2, 3},
+								{4, 5, 6},
+								{7, 8, },
+								{0, 5, 2}
+							};
+		Board test = new Board(three);
+		System.out.println(test.toString());
 	}
 }
