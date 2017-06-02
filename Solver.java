@@ -1,4 +1,5 @@
 import java.util.PriorityQueue;
+import java.util.Scanner;
 
 public class Solver {
 
@@ -35,6 +36,11 @@ public class Solver {
 	
 	//  read puzzle instance from stdin and print solution to stdout (in format above)
 	public static void main(String[] args) {
-		
+		Scanner stdin = new Scanner(new File(./stdin.txt));
+		String input = "";
+		while (stdin.hasNextLine()) {
+			input += stdin.nextLine() + "\n";
+		}
+		System.out.println("Input: " + input);
 	}
 }
