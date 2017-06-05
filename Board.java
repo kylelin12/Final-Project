@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+import java.util.Stack;
 
 // http://introcs.cs.princeton.edu/java/assignments/8puzzle.html
 
@@ -76,9 +76,11 @@ public class Board {
 		return true;
 	}
 	
-	// return an Iterable of all neighboring board positions
+	// return an Iterable of all neighborngth = _initial._current.length;
+		                          ^
+ing board positions
 	public Iterable < Board > neighbors() {
-		LinkedList < Board > neighbors = new LinkedList < Board > ();
+		Stack < Board > neighbors = new Stack < Board > ();
 		return neighbors;
 	}
 	
