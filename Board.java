@@ -1,4 +1,4 @@
-import java.util.Stack;
+import java.util.LinkedList;
 
 // http://introcs.cs.princeton.edu/java/assignments/8puzzle.html
 
@@ -76,12 +76,51 @@ public class Board {
 		return true;
 	}
 	
-	// return an Iterable of all neighborngth = _initial._current.length;
-		                          ^
-ing board positions
+	public boolean isSolution() {
+		Integer[][] toCompare = {
+								{1, 2, 3},
+								{4, 5, 6},
+								{7, 8, null}
+							};
+		return _current.equals(toCompare);
+	}
+	 
+	//int boardLength = _current.length;
+	
+	// return an Iterable of all neighboring board positions	                          
 	public Iterable < Board > neighbors() {
-		Stack < Board > neighbors = new Stack < Board > ();
+		LinkedList < Board > neighbors = new LinkedList < Board > ();
+		int[] spaces = 
 		return neighbors;
+	}
+	
+	// Duplciates the board
+	private Integer[][] dupe(Integer[][] board) {
+		Integer[][] copy = new Integer[_current.length][_current.length];
+		for (int i = 0; i < _current.length; i++) {
+			for (int j = 0; j < _current.length; j++) {
+				copy[i][j] = _current[i][j];
+			}
+		}
+		return copy;
+	}
+	
+	// Creates a duplicate of the board with one position swapped
+	public Board dupeChild() {
+		for (int r = 0; r < _current.length; r++)
+            for (int c = 0; c < _current.length - 1; c++)
+                if (_current[r][c] != null && _current[r][c + 1] != null)
+					return new Board(swap(r, c, r, c + 1));
+		return null;
+	}
+	
+	// Returns the board after swaping two positions on the board
+	private Integer[][] swap(int r1, int c1, int r2, int c2) {
+		Integer[][] temp = dupe(_current);
+		int toCopy = temp[r1][c1];
+		temp[r1][c1] = temp[r2][c2];
+		temp[r2][c2] = toCopy;
+		return temp;
 	}
 	
 	// return a string representation of the board

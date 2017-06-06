@@ -1,41 +1,61 @@
 import java.util.PriorityQueue;
 
 public class Solver {
-/*
-	private class bComparator implements Comparable<bComparator> {
-		private bComparator previous;
+
+	private class Move implements Comparable<Move> {
+		private Move previous;
 		private Board current;
 		private int numMoves;
 		
-		public bComparator(Board board) {
+		public Move(Board board) {
 			this.current = board;
 			this.numMoves = 0;
 		}
 		
-		public bComparator(Board board, bComparator previous) {
+		public Move(Board board, Move previous) {
 			this.current = board;
 			this.previous = previous;
-			this.moves = previous.moves + 1;
+			this.numMoves = previous.numMoves + 1;
 		}
 		
-		public int compareTo(bComparator compare) {
-			return (this.current.manhattan() - compare.current.manhattan()) + (this.moves - compare.moves);
+		public int compareTo(Move compare) {
+			return (this.current.manhattan() - compare.current.manhattan()) + (this.numMoves - compare.numMoves);
 		}
 	}
-*/
-	/* private bComparator previous; */
+
+	private Move lastMove;
 	private Board _initial;
 	private Board _final;
+	
 	// find a solution to the initial board
 	public Solver(Board initial) {
 		_initial = initial;
-		/*
-		PriorityQueue<bComparator> compare = new PriorityQueue<bComparator>();
-		compare.add(new bComparator(initial));
+		PriorityQueue<Move> compare = new PriorityQueue<Move>();
+		compare.add(new Move(initial));
 		
-		PriroityQueue<bComparator> compareChild = new PriorityQueue<bComparator>();
-		compareChild.add(new bComparator());
-	*/
+		PriorityQueue<Move> compareChild = new PriorityQueue<Move>();
+		compareChild.add(new Move(initial.dupeChild()));
+		
+		while (true) {
+			lastMove = allChild(compare);
+			if (lastMove != null || allChild(compareChild) != null) 
+				return; 
+		}
+	}
+	
+	// Returns the board after the best possible move has been run
+	private Move allChild(PriorityQueue<Move> compare) {
+		if (compare.isEmpty())
+			return null;
+		Move bestChoice = compare.poll();
+		if (bestChoice.current.isSolution())
+			return bestChoice;
+		for (Board neighbor: bestChoice.current.neighbors()) {
+			if (bestChoice.previous == null || !neighbor.equals(bestChoice.previous.current)) {
+				compare.add(new Move(neighbor, bestChoice));
+			}
+		}
+		return null;
 	}
 	
 	// is the initial board solvable?
@@ -45,11 +65,13 @@ public class Solver {
 		boardArray = fillArray(boardArray, _initial.getBoard("Current"));
 		int numInversions = 0;
 		for (int i = 0; i < boardLength - 1; i++) {
-			for (int j = i; j < boardLength; j++) {
-				if (boardArray[j] != 0) {
-					if (boardArray[j] < boardArray[i])
-						numInversions++;
-						System.out.println(numInversions);
+			if (boardArray[i] != 0) {
+				for (int j = i + 1; j < boardArray.length; j++) {
+					if (boardArray[j] != 0) {
+						if (boardArray[j] < boardArray[i]) {
+							numInversions++;
+						}
+					}
 				}
 			}
 		}
