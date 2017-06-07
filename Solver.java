@@ -104,10 +104,10 @@ public class Solver {
 	//  read puzzle instance from stdin and print solution to stdout (in format above)
 	public static void main(String[] args) {
 		Integer[][] boardTest = {
-								{1, 2, 3},
-								{0, 5, 6},
-								{4, 8, 7}
-							};
+									{1, 2, 3},
+									{0, 5, 6},
+									{4, 8, 7}
+								};
 		Board testBoard = new Board(boardTest);
 		Solver newSolve = new Solver(testBoard);
 		System.out.println(newSolve.isSolvable());

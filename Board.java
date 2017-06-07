@@ -114,7 +114,7 @@ public class Board {
 		return null;
 	}
 	
-	// Returns the board after swaping two positions on the board
+	// Returns the board after swapping two positions on the board
 	private Integer[][] swap(int r1, int c1, int r2, int c2) {
 		Integer[][] temp = dupe(_current);
 		int toCopy = temp[r1][c1];
