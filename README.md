@@ -9,3 +9,14 @@
 # Chosen Project:
 
 8 Slider Puzzle
+
+# Objective:
+
+Write a program to solve the 8-puzzle problem (and its natural generalizations) using the A* search algorithm.
+
+# Solution:
+
+- Takes input .txt file
+- Converts it into a 2d Integer array
+- Uses the A* algorithm to give each possibility a priority
+- Returns the highest priority solution, the one which requires the least number of moves
