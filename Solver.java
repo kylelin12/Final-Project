@@ -1,68 +1,76 @@
 import java.util.PriorityQueue;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.io. * ;
 
 public class Solver {
 
-	private class Move implements Comparable<Move> {
-		private Move previous;
-		private Board current;
-		private int numMoves;
-		
+	// Private Move object that allows you to compare Boards easily
+	private class Move implements Comparable < Move > {
+		private Move _previous;
+		private Board _current;
+		private int _numMoves;
+
 		public Move(Board board) {
-			this.current = board;
-			this.numMoves = 0;
+			_current = board;
 		}
-		
+
 		public Move(Board board, Move previous) {
-			this.current = board;
-			this.previous = previous;
-			this.numMoves = previous.numMoves + 1;
+			_current = board;
+			_previous = previous;
+			_numMoves = _previous._numMoves + 1;
 		}
-		
+
 		public int compareTo(Move compare) {
-			return (this.current.manhattan() - compare.current.manhattan()) + (this.numMoves - compare.numMoves);
+			return (_current.manhattan() - compare._current.manhattan()) + (_numMoves - compare._numMoves);
 		}
 	}
 
-	private Move lastMove;
-	private Board _initial;
-	private Board _final;
-	
+	private Move _previousMove;
+
 	// find a solution to the initial board
 	public Solver(Board initial) {
-		_initial = initial;
-		PriorityQueue<Move> compare = new PriorityQueue<Move>();
+		PriorityQueue < Move > compare = new PriorityQueue < Move > ();
 		compare.add(new Move(initial));
-		
-		PriorityQueue<Move> compareChild = new PriorityQueue<Move>();
-		compareChild.add(new Move(initial.dupeChild()));
-		
+
+		PriorityQueue < Move > compareChild = new PriorityQueue < Move > ();
+		compareChild.add(new Move(initial.child()));
+
 		while (true) {
-			lastMove = allChild(compare);
-			if (lastMove != null || allChild(compareChild) != null) 
-				return; 
+			_previousMove = allChild(compare);
+			if (_previousMove != null || allChild(compareChild) != null) return;
 		}
 	}
-	
+
 	// Returns the board after the best possible move has been run
-	private Move allChild(PriorityQueue<Move> compare) {
-		if (compare.isEmpty())
-			return null;
+	private Move allChild(PriorityQueue < Move > compare) {
+		if (compare.isEmpty()) return null;
 		Move bestChoice = compare.poll();
-		if (bestChoice.current.isSolution())
-			return bestChoice;
-		for (Board neighbor: bestChoice.current.neighbors()) {
-			if (bestChoice.previous == null || !neighbor.equals(bestChoice.previous.current)) {
+		if (bestChoice._current.isSolution()) return bestChoice;
+		for (Board neighbor: bestChoice._current.neighbors()) {
+			if (bestChoice._previous == null || !neighbor.equals(bestChoice._previous._current)) {
 				compare.add(new Move(neighbor, bestChoice));
 			}
 		}
 		return null;
 	}
-	
-	// is the initial board solvable?
-	public boolean isSolvable() {
-		int boardLength = _initial.getBoard("Current").length;
-		int[] boardArray = new int[(int)Math.pow(boardLength, 2)];
-		boardArray = fillArray(boardArray, _initial.getBoard("Current"));
+
+	// is the initial board solvable? Uses inversion algorithm
+	public boolean isSolvable(Board initial) {
+		int boardLength = initial.getBoard().length;
+		Integer[] boardArray = new Integer[(int) Math.pow(boardLength, 2)];
+
+		// Converts a 2d to 1d array
+		ArrayList < Integer > list = new ArrayList < Integer > ();
+		for (int r = 0; r < initial.getBoard().length; r++) {
+			for (int c = 0; c < initial.getBoard().length; c++) {
+				list.add(initial.getBoard()[r][c]);
+			}
+		}
+		for (int i = 0; i < boardArray.length; i++) {
+			boardArray[i] = list.get(i);
+		}
+
 		int numInversions = 0;
 		for (int i = 0; i < boardLength - 1; i++) {
 			if (boardArray[i] != 0) {
@@ -77,39 +85,47 @@ public class Solver {
 		}
 		return (numInversions % 2 == 0);
 	}
-	
-	private int[] fillArray(int[] toFill, Integer[][] filling) {
-		int index = 0;
-		for (int i = 0; i < filling.length; i++) {
-			for (int j = 0; j < filling[i].length; j++) {
-				toFill[index] = filling[i][j];
-				index++;
-			}
-		}
-		
-		return toFill;
-	}
-	
+
 	// return min number of moves to solve the initial board
 	// -1 if no such solution
-	public int moves() {
-		return -1;
+	public int moves(Board initial) {
+		if (isSolvable(initial)) return _previousMove._numMoves;
+		else return - 1;
 	}
-	
+
 	// return string representation of solution (as described above)
 	public String toString() {
-		return _final.toString();
+		return _previousMove.toString();
 	}
-	
+
 	//  read puzzle instance from stdin and print solution to stdout (in format above)
-	public static void main(String[] args) {
-		Integer[][] boardTest = {
-									{1, 2, 3},
-									{0, 5, 6},
-									{4, 8, 7}
-								};
-		Board testBoard = new Board(boardTest);
-		Solver newSolve = new Solver(testBoard);
-		System.out.println(newSolve.isSolvable());
+	public static void main(String[] args) throws FileNotFoundException {
+		// # of rows and columns
+		Scanner input = new Scanner(new File(args[0]));
+		int rows = 0;
+		int columns = 0;
+		while (input.hasNextLine()) {
+			rows++;
+			Scanner colReader = new Scanner(input.nextLine());
+			while (colReader.hasNextInt()) {
+				columns++;
+			}
+		}
+		Integer[][] board = new Integer[rows][columns];
+
+		input.close();
+		// actual insert of data
+		input = new Scanner(new File(args[0]));
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				if (input.hasNextInt()) {
+					board[i][j] = input.nextInt();
+				}
+			}
+		}
+
+		// Solves the board
+		Board boardSolution = new Board(board);
+		System.out.println(boardSolution.toString());
 	}
 }
